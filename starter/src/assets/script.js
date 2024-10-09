@@ -124,9 +124,10 @@ function emptyCart() {
 */
 function pay(amount) {
   let total = cartTotal();
-  if (amount >= total) {
-    totalPaid += amount;
-    return amount - total;
+  let change = amount - total;
+  if (change >= 0) {
+    totalPaid += total;
+    return change;
   } else {
     totalPaid += amount;
     return -(total - amount);
