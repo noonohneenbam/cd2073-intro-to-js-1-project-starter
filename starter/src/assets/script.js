@@ -1,4 +1,5 @@
 /* Completed: Create an array named products which you will use to add all of your product object literals that you create in the next step. */
+let totalPaid = 0;
 const products =[
 
 
@@ -124,8 +125,10 @@ function emptyCart() {
 function pay(amount) {
   let total = cartTotal();
   if (amount >= total) {
+    totalPaid += amount;
     return amount - total;
   } else {
+    totalPaid += amount;
     return -(total - amount);
   }
 };
