@@ -36,6 +36,10 @@ const products =[
 /* Completed: Declare an empty array named cart to hold the items in the cart */
 let cart = [];
 
+/* Completed: adding function to avoid code repetition*/
+function getProductByIdFromList(productId, productList) {
+  return productList.find((product) => product.productId === productId);
+};
 
 /* Completed: Create a function named addProductToCart that takes in the product productId as an argument
   - addProductToCart should get the correct product based on the productId
@@ -43,9 +47,9 @@ let cart = [];
   - if the product is not already in the cart, add it to the cart
 */
 function addProductToCart(productId) {
-  let product = products.find(p => p.productId === productId);
+  let product = getProductByIdFromList(productId, products);
   if (product) {
-    let cartItem = cart.find(p => p.productId === productId);
+    let cartItem = getProductByIdFromList(productId, cart);
     if (cartItem) {
       cartItem.quantity++;
     } else {
@@ -61,11 +65,12 @@ function addProductToCart(productId) {
   - increaseQuantity should then increase the product's quantity
 */
 function increaseQuantity(productId) {
-  let product = cart.find(p => p.productId === productId);
+  let product = getProductByIdFromList(productId, cart);
   if (product) {
     product.quantity++;
   }
 };
+
 
 /* Completed: Create a function named decreaseQuantity that takes in the productId as an argument
   - decreaseQuantity should get the correct product based on the productId
@@ -73,7 +78,7 @@ function increaseQuantity(productId) {
   - if the function decreases the quantity to 0, the product is removed from the cart
 */
 function decreaseQuantity(productId) {
-  let product = cart.find(p => p.productId === productId);
+  let product = getProductByIdFromList(productId, cart);
   if (product) {
     product.quantity--;
     if (product.quantity === 0) {
@@ -89,7 +94,7 @@ function decreaseQuantity(productId) {
   - removeProductFromCart should remove the product from the cart
 */
 function removeProductFromCart(productId) {
-  let productIndex = cart.findIndex(p => p.productId === productId);
+  let productIndex = getProductByIdFromList(productId, cart);
   if (productIndex !== -1) {
     cart.splice(productIndex, 1);
   }
@@ -103,11 +108,12 @@ function removeProductFromCart(productId) {
 */
 function cartTotal() {
   let total = 0;
-  for (let product of cart) {
-    total += product.price * product.quantity;
+  for (let i = 0; i < cart.length; i++) {
+    total += cart[i].price * cart[i].quantity;
   }
   return total;
-};
+}
+
 
 
 /* Completed: Create a function called emptyCart that empties the products from the cart */
@@ -124,13 +130,15 @@ function emptyCart() {
 */
 function pay(amount) {
   let total = cartTotal();
-  let change = amount - total;
-  if (change >= 0) {
-    totalPaid += total;
-    return change;
+  totalPaid += amount;
+  let remaining = totalPaid - total;
+  if (remaining < 0) {
+    return remaining;
   } else {
-    totalPaid += amount;
-    return -(total - amount);
+    let change = remaining;
+    totalPaid -= change; // subtract the change from totalPaid
+    emptyCart(); // empty cart after payment
+    return change;
   }
 };
 
